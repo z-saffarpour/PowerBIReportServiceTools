@@ -12,14 +12,14 @@ function Get-RsPBIContentItems {
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
         $PowerBIReportItemsJSON,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $DownloadPath,
+        $PowerBIContentPath,
         $ErrorFile
     )
     Begin {
         try {
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
-            if (!(Test-Path -Path $DownloadPath)) {
-                New-Item -ItemType Directory -Path $DownloadPath | Out-Null
+            if (!(Test-Path -Path $PowerBIContentPath)) {
+                New-Item -ItemType Directory -Path $PowerBIContentPath | Out-Null
             }
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
@@ -27,7 +27,7 @@ function Get-RsPBIContentItems {
                 $myReportPath = $myReportItem.Path
                 try {
                     $myPBIContentAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports(' + $myReportId + ')/Content/$value'
-                    $myPBIReportDirectory = $DownloadPath + $myReportPath.Replace($myReportName, '')
+                    $myPBIReportDirectory = $PowerBIContentPath + $myReportPath.Replace($myReportName, '')
                     $myPBIContentFile = $myPBIReportDirectory + '\' + $myReportName + '.pbix'    
                     if (!(Test-Path -Path $myPBIReportDirectory)) {
                         New-Item -ItemType Directory -Path $myPBIReportDirectory | Out-Null
