@@ -29,10 +29,10 @@ function New-RsFolderItems {
                         "Path" = $myFolderPath;
                     } | ConvertTo-Json -Depth 15
                     if ($null -ne $Credential) {
-                        $myResponse = Invoke-RestMethod -Method Post -Uri $myFolderURI -Credential $myCredential -ContentType 'application/json; charset=unicode' -Body $myBody
+                        $myResponse = Invoke-RestMethod -Method Post -Uri $myFolderURI -Credential $Credential -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false
                     }
                     else {
-                        $myResponse = Invoke-RestMethod -Method Post -Uri $myFolderURI -UseDefaultCredentials -ContentType 'application/json; charset=unicode' -Body $myBody
+                        $myResponse = Invoke-RestMethod -Method Post -Uri $myFolderURI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false
                     }
     
                     $myFolderResult.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; "Path" = $myFolderPath; "Id_New" = $myResponse.Id }) | Out-Null    

@@ -43,6 +43,9 @@ function Get-RsPBIReportScheduleItems {
                         $mySpliter >> $ErrorFile 
                     }
                 }
+                finally {
+                    Write-Verbose ("   Schedule ==>> " + $myReportScheduleItems.Count + " Of " + $myReportItems.Count)
+                }
             }
             $myResultJSON = $myReportScheduleItems | ConvertTo-Json -Depth 15 
             return , $myResultJSON

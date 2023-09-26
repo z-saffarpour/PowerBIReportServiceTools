@@ -26,7 +26,7 @@ function New-RsReportContentItems {
                 $myReportName = $myReportItem.Name
                 $myReportPath = $myReportItem.Path    
                 try {
-                    $myReportFile = $PowerBIReportContentPath + $myReportPath.Replace($myReportName, '') + '/' + $myReportName + '.pbix' 
+                    $myReportFile = $PowerBIReportContentPath + $myReportPath.Substring(0 , $myReportPath.LastIndexOf($myReportName))+ '/' + $myReportName + '.pbix' 
                     $myReportBytes = [System.IO.File]::ReadAllBytes($myReportFile)
                     $myReportContent = [System.Convert]::ToBase64String($myReportBytes)
                     $myBody = @{
@@ -43,7 +43,7 @@ function New-RsReportContentItems {
                     else {
                         $myResponse = Invoke-RestMethod -Method Post -Uri $myCatalogItemsURI -UseDefaultCredentials -ContentType 'application/json; charset=unicode' -Body $myBody -Verbose:$false
                     }
-                    $myReportResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; "Type" = "PowerBIReport"; "Id_New" = $myResponse.Id }) | Out-Null
+                    $myReportResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; "CreatedBy" = $myReportItem.CreatedBy; "CreatedDate" = $myReportItem.CreatedDate; "Hidden" = $myReportItem.Hidden; "Id_New" = $myResponse.Id }) | Out-Null
                 }
                 catch {                
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {

@@ -44,6 +44,9 @@ function Get-RsPBIReportDataSourceItems {
                         $mySpliter >> $ErrorFile 
                     }
                 }
+                finally {
+                    Write-Verbose ("   DataSource ==>> " + $myReportDataSourceItems.Count + " Of " + $myReportItems.Count)
+                }
             }
             $myResultJSON = $myReportDataSourceItems | ConvertTo-Json -Depth 15   
             return , $myResultJSON

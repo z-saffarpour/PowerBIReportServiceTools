@@ -50,6 +50,9 @@ function Get-RsPBIReportPolicyItems {
                         $mySpliter >> $ErrorFile 
                     }
                 }
+                finally {
+                    Write-Verbose ("   Policy ==>> " + $myReportPolicyItems.Count + " Of " + $myReportItems.Count)
+                }
             }
             $myResultJSON = $myReportPolicyItems | ConvertTo-Json -Depth 15
             return , $myResultJSON   

@@ -44,11 +44,14 @@ function New-RsReportDataSourceItems {
                             if ($null -ne $myUploadDataSourceItem -and $null -ne $myDataSourceItem.DataModelDataSource.Username) {
                                 $myUploadDataSourceItem.DataModelDataSource.AuthType = $myDataSourceItem.DataModelDataSource.AuthType
                                 $myReportCredentialItem = $myReportCredentialItems | Where-Object { $_.Username -eq $myDataSourceItem.DataModelDataSource.Username }
-                                if (!($null -ne $myReportCredentialItem)) {
-                                    $myReportCredentialItem.CredentialUsername = $myDataSourceItem.DataModelDataSource.Username
+                                if ($null -ne $myReportCredentialItem) {
+                                    $myUploadDataSourceItem.DataModelDataSource.Username = $myReportCredentialItem.CredentialUsername
+                                    $myUploadDataSourceItem.DataModelDataSource.Secret = $myReportCredentialItem.CredentialPassword
                                 }
-                                $myUploadDataSourceItem.DataModelDataSource.Username = $myReportCredentialItem.CredentialUsername
-                                $myUploadDataSourceItem.DataModelDataSource.Secret = $myReportCredentialItem.CredentialPassword
+                                else {
+                                    $myUploadDataSourceItem.DataModelDataSource.Username = $myDataSourceItem.DataModelDataSource.Username
+                                    $myUploadDataSourceItem.DataModelDataSource.Secret = ""
+                                }
                             }
                         }
                         $myUploadDataSourceArray = @($myUploadDataSourceItems)

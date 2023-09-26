@@ -13,10 +13,10 @@ function Get-SystemSchedule {
             $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
             $myScheduleItems = New-Object System.Collections.ArrayList
             if ($null -ne $Credential) {
-                $myProxy = New-WebServiceProxy  -Class 'RS' -Namespace 'RS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
+                $myProxy = New-WebServiceProxy  -Class 'GetRS' -Namespace 'GetRS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
             }
             else {
-                $myProxy = New-WebServiceProxy  -Class 'RS' -Namespace 'RS' -Uri $myProxyURI -UseDefaultCredential -Verbose:$false
+                $myProxy = New-WebServiceProxy  -Class 'GetRS' -Namespace 'GetRS' -Uri $myProxyURI -UseDefaultCredential -Verbose:$false
             }
             $myListScheduleItems = $myProxy.ListSchedules([System.Management.Automation.Language.NullString]::Value)
             foreach ($myListScheduleItem in $myListScheduleItems) {

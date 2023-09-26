@@ -27,21 +27,23 @@ function Grant-RsFolderPolicyItems {
                 $myFolderId_New = $myFolderItem.Id_New
                 try {
                     $myFolderPolicyItem = $myFolderPolicyItems | Where-Object { $_.Id -eq $myFolderId } 
-                    $myFolderAPI = $ReportRestAPIURI + "/api/v2.0/Folders(" + $myFolderId_New + ")/Policies"
-                    if ($null -ne $Credential) {
-                        $myResponse = Invoke-RestMethod -Method Get -Uri $myFolderAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
-                    }
-                    else {
-                        $myResponse = Invoke-RestMethod -Method Get -Uri $myFolderAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
-                    }
-                    $myResponse.Policies = $myFolderPolicyItem.Policies
-                    $myResponse.InheritParentPolicy = $myFolderPolicyItem.InheritParentPolicy #$false
-                    $myBody = $myResponse | ConvertTo-Json -Depth 15
-                    if ($null -ne $Credential) {
-                        Invoke-RestMethod -Method Put -Uri $myFolderAPI -Credential $Credential -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false | Out-Null
-                    }
-                    else {
-                        Invoke-RestMethod -Method Put -Uri $myFolderAPI -UseDefaultCredentials  -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false | Out-Null
+                    if ($null -ne $myFolderId_New -and $myFolderPolicyItem.InheritParentPolicy -eq $false) {
+                        $myFolderAPI = $ReportRestAPIURI + "/api/v2.0/Folders(" + $myFolderId_New + ")/Policies"
+                        if ($null -ne $Credential) {
+                            $myResponse = Invoke-RestMethod -Method Get -Uri $myFolderAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
+                        }
+                        else {
+                            $myResponse = Invoke-RestMethod -Method Get -Uri $myFolderAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
+                        }
+                        $myResponse.Policies = $myFolderPolicyItem.Policies
+                        $myResponse.InheritParentPolicy = $false
+                        $myBody = $myResponse | ConvertTo-Json -Depth 15
+                        if ($null -ne $Credential) {
+                            Invoke-RestMethod -Method Put -Uri $myFolderAPI -Credential $Credential -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false | Out-Null
+                        }
+                        else {
+                            Invoke-RestMethod -Method Put -Uri $myFolderAPI -UseDefaultCredentials  -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false | Out-Null
+                        }
                     }
                     $myFolderResultItems.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; }) | Out-Null
                 }

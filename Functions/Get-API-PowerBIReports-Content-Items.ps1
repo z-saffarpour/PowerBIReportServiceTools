@@ -1,7 +1,7 @@
 ﻿<#
 https://app.swaggerhub.com/apis/microsoft-rs/PBIRS/2.0#/PowerBIReports/GetPowerBIReports
 #>
-function Get-RsPBIContentItems {
+function Get-RsPBIReportContentItems {
     [CmdletBinding()]
     param 
     (
@@ -12,14 +12,15 @@ function Get-RsPBIContentItems {
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
         $PowerBIReportItemsJSON,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $PowerBIContentPath,
+        $PowerBIReportContentPath,
         $ErrorFile
     )
     Begin {
         try {
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
-            if (!(Test-Path -Path $PowerBIContentPath)) {
-                New-Item -ItemType Directory -Path $PowerBIContentPath | Out-Null
+            $myReportResultItems = New-Object System.Collections.ArrayList
+            if (!(Test-Path -Path $PowerBIReportContentPath)) {
+                New-Item -ItemType Directory -Path $PowerBIReportContentPath | Out-Null
             }
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
@@ -27,7 +28,7 @@ function Get-RsPBIContentItems {
                 $myReportPath = $myReportItem.Path
                 try {
                     $myPBIContentAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports(' + $myReportId + ')/Content/$value'
-                    $myPBIReportDirectory = $PowerBIContentPath + $myReportPath.Replace($myReportName, '')
+                    $myPBIReportDirectory = $PowerBIReportContentPath + $myReportPath.Substring(0 , $myReportPath.LastIndexOf($myReportName))
                     $myPBIContentFile = $myPBIReportDirectory + '\' + $myReportName + '.pbix'    
                     if (!(Test-Path -Path $myPBIReportDirectory)) {
                         New-Item -ItemType Directory -Path $myPBIReportDirectory | Out-Null
@@ -37,7 +38,8 @@ function Get-RsPBIContentItems {
                     }
                     else {
                         Invoke-WebRequest -Uri $myPBIContentAPI -OutFile $myPBIContentFile -UseBasicParsing -UseDefaultCredentials -Verbose:$false | Out-Null
-                    }   
+                    }
+                    $myReportResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; }) | Out-Null
                 }
                 catch {
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
@@ -49,6 +51,9 @@ function Get-RsPBIContentItems {
                         $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
+                }
+                finally {
+                    Write-Verbose ("   PBIReportContent ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
                 }
             }
         }

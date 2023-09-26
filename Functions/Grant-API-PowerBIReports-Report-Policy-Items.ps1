@@ -21,13 +21,13 @@ function Grant-RsReportPolicyItems {
             $myReportPolicyItems = $PowerBIReportPolicyItemsJSON | ConvertFrom-Json
             $myReportResultItems = New-Object System.Collections.ArrayList
             foreach ($myReportItem in $myReportItems) {
-                $myReportId = $myReportItem.ReportId
+                $myReportId = $myReportItem.Id
                 $myReportName = $myReportItem.Name
                 $myReportPath = $myReportItem.Path
                 $myReportId_New = $myReportItem.Id_New
 
                 $myReportPolicyItem = $myReportPolicyItems | Where-Object { $_.ReportId -eq $myReportId } 
-                if ($null -ne $myReportId_New) {
+                if ($null -ne $myReportId_New -and $myReportPolicyItem.InheritParentPolicy -eq $false) {
                     $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/Policies"
                     try {
                         if ($null -ne $Credential) {
@@ -37,7 +37,7 @@ function Grant-RsReportPolicyItems {
                             $myResponse = Invoke-RestMethod -Method Get -Uri $myPowerBIReportAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
                         }
                         $myResponse.Policies = $myReportPolicyItem.Policies
-                        $myResponse.InheritParentPolicy = $myReportPolicyItem.InheritParentPolicy #$false
+                        $myResponse.InheritParentPolicy = $false
                         $myBody = $myResponse | ConvertTo-Json -Depth 15
                         if ($null -ne $Credential) {
                             $myResponse = Invoke-RestMethod -Method Put -Uri $myPowerBIReportAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Body $myBody -Verbose:$false

@@ -55,7 +55,7 @@ function New-RsReportScheduleItems {
                             $myBody = ConvertTo-Json -InputObject $myUploadPBIReportScheduleItem -Depth 10
                             try {
                                 if ($null -ne $Credential) {
-                                    Invoke-WebRequest -Uri $myCacheRefreshPlanAPI -Method Post -Body $myBody -ContentType "application/json; charset=unicode" -Credential $myCredential -UseBasicParsing -Verbose:$false | Out-Null
+                                    Invoke-WebRequest -Uri $myCacheRefreshPlanAPI -Method Post -Body $myBody -ContentType "application/json; charset=unicode" -Credential $Credential -UseBasicParsing -Verbose:$false | Out-Null
                                 }
                                 else {
                                     Invoke-WebRequest -Uri $myCacheRefreshPlanAPI -Method Post -Body $myBody -ContentType "application/json; charset=unicode" -UseDefaultCredentials -UseBasicParsing -Verbose:$false | Out-Null

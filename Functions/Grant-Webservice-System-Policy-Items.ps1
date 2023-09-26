@@ -15,15 +15,15 @@ function Grant-SystemPolicyItems {
             $mySystemPolicyItems = $SystemPolicyItemsJSON | ConvertFrom-Json
             $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
             if ($null -ne $Credential) {
-                $myProxy = New-WebServiceProxy -Class 'RS' -Namespace 'RS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
+                $myProxy = New-WebServiceProxy -Class 'GrantRS' -Namespace 'GrantRS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
             }
             else {
-                $myProxy = New-WebServiceProxy -Class 'RS' -Namespace 'RS' -Uri $myProxyURI -UseDefaultCredential -Verbose:$false
+                $myProxy = New-WebServiceProxy -Class 'GrantRS' -Namespace 'GrantRS' -Uri $myProxyURI -UseDefaultCredential -Verbose:$false
             }
             $myOriginalPolicies = $myProxy.GetSystemPolicies()
         
-            $myPolicyDataType = 'RS.Policy'
-            $myRoleDataType = 'RS.Role'
+            $myPolicyDataType = 'GrantRS.Policy'
+            $myRoleDataType = 'GrantRS.Role'
 
             $myNumPolicies = $myOriginalPolicies.Length 
             foreach ($mySystemPolicyItem in $mySystemPolicyItems) {

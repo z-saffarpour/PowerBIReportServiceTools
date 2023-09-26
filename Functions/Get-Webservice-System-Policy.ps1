@@ -13,10 +13,10 @@ function Get-SystemPolicy {
             $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
             $mySystemPolicyItems = New-Object System.Collections.ArrayList
             if ($null -ne $Credential) {
-                $myProxy = New-WebServiceProxy -Class 'RS' -Namespace 'RS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
+                $myProxy = New-WebServiceProxy -Class 'GetRS' -Namespace 'GetRS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
             }
             else {
-                $myProxy = New-WebServiceProxy -Class 'RS' -Namespace 'RS' -Uri $myProxyURI -UseDefaultCredential -Verbose:$false
+                $myProxy = New-WebServiceProxy -Class 'GetRS' -Namespace 'GetRS' -Uri $myProxyURI -UseDefaultCredential -Verbose:$false
             }
             $mySystemPolicies = $myProxy.GetSystemPolicies()
             foreach ($mySystemPolicyItem in $mySystemPolicies) {
