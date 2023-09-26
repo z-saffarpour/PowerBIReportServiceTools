@@ -1,1 +1,2 @@
-PowerBIReportServiceTools.ps1
+PowerBIReportServiceTools.Development.ps1
+PowerBIReportServiceTools.Production.ps1
