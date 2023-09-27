@@ -1,24 +1,7 @@
 clear-host
-
-$SourceUser = "myUsername"
-$SourcePassword= "myPassword"
-$SourceReportURI = 'http://abc.local/'
-
-$DestinationUser = "myUsername"
-$DestinationPassword= 'myPassword'
-$DestinationReportURI = 'http://xyz:local/'
-
-$DownloadPath = 'C:\Temp\Download'
-$UploadPath = 'C:\Temp\Upload'
-$ErrorPath = 'C:\Temp\'
-
-$myPowerBIReportContentPath = $DownloadPath + '\PowerBIReports'
-$myExcelContentPath = $DownloadPath + '\ExcelWorkbooks'
-$myResourceContentPath = $DownloadPath + '\ExcelWorkbooks'
-
-$ExportFiles = $true
 ##--==============================================================================================================
-$ScriptRoot = "D:\Source_GitHub\PowerBIReportServiceTools"
+$ScriptRoot = "C:\Source_GitHub\PowerBIReportServiceTools"
+$ConfigurationFile = ".\Configuration.json"
 $myScriptItems =  Get-ChildItem "$ScriptRoot\Functions" -Recurse -Include *.ps1
 foreach ($myScriptItem in $myScriptItems) 
 { 
@@ -27,6 +10,26 @@ foreach ($myScriptItem in $myScriptItems)
 }
 . "$ScriptRoot\Get-AllItemsFromSource.ps1"
 . "$ScriptRoot\New-AllItemsToDestination.ps1"
+##--==============================================================================================================
+$myConfiguration = Get-Content $ConfigurationFile -Raw | ConvertFrom-Json
+
+$SourceUser = $myConfiguration.SourceUser
+$SourcePassword= $myConfiguration.SourcePassword
+$SourceReportURI = $myConfiguration.SourceReportURI
+
+$DestinationUser = $myConfiguration.DestinationUser
+$DestinationPassword= $myConfiguration.DestinationPassword
+$DestinationReportURI = $myConfiguration.DestinationReportURI
+
+$DownloadPath = $myConfiguration.DownloadPath
+$UploadPath = $myConfiguration.UploadPath
+$ErrorPath = $myConfiguration.ErrorPath
+$ExportFiles = $myConfiguration.ExportFiles
+
+$myPowerBIReportContentPath = $DownloadPath + '\PowerBIReports'
+$myExcelContentPath = $DownloadPath + '\ExcelWorkbooks'
+$myResourceContentPath = $DownloadPath + '\Resources'
+
 $ErrorFile = $ErrorPath + "\ErrorFile_" + (Get-Date -Format "yyyy-MM-dd_HH-mm-ss") + ".txt"
 ##--==============================================================================================================
 $mySourcePasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $SourcePassword
@@ -73,9 +76,7 @@ $myPowerReportPolicyJSON = Get-Content -Path $myPBIReportPoliciesFile -Raw
 $myPBIReportDataSourcesFile = $DownloadPath + '\PowerBIReports_DataSources.json'
 $myPowerReportDataSourceJSON = Get-Content -Path $myPBIReportDataSourcesFile -Raw
 
-$myPBIReportCredentialList = New-Object System.Collections.ArrayList
-$myPBIReportCredentialList.Add([PSCustomObject]@{"Username" = "myUsername"; "CredentialUsername" = "myCredentialUsername"; "CredentialPassword" = 'myCredentialPassword'}) | Out-Null
-$myPowerReportCredentialJSON = ConvertTo-Json -InputObject $myPBIReportCredentialList -Depth 15
+$myPowerReportCredentialJSON = $myConfiguration.PowerBIReportDataSourceCredential | ConvertTo-Json -Depth 15
 
 $myPBIReportScheduleFile = $DownloadPath + '\PowerBIReports_Schedule.json'
 $myPowerReportScheduleJSON = Get-Content -Path $myPBIReportScheduleFile -Raw

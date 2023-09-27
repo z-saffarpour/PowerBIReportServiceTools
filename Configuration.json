@@ -1,0 +1,19 @@
+{
+    "SourceUser": "myUsername1",
+    "SourcePassword": "myPassword1",
+    "SourceReportURI": "http://abc.local/",
+    "DestinationUser": "myUsername2",
+    "DestinationPassword": "myPassword2",
+    "DestinationReportURI": "http://xyz:local/",
+    "DownloadPath": "C:\\Temp\\Download",
+    "UploadPath": "C:\\Temp\\Upload",
+    "ErrorPath": "C:\\Temp\\",
+    "ExportFiles": "true",
+    "PowerBIReportDataSourceCredential": [
+        {
+            "Username": "myUsername3",
+            "CredentialUsername": "myCredentialUsername1",
+            "CredentialPassword": "myCredentialPassword1"
+        }
+    ]
+}

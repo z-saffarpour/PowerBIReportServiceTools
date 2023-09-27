@@ -1,2 +1,5 @@
 PowerBIReportServiceTools.Development.ps1
 PowerBIReportServiceTools.Production.ps1
+
+Configuration.Development.json
+Configuration.Production.json
