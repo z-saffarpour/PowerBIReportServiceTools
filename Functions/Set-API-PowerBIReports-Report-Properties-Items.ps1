@@ -21,21 +21,23 @@ function Set-RsReportPropertiesItems {
                 $myReportId = $myReportItem.Id
                 $myReportName = $myReportItem.Name
                 $myReportPath = $myReportItem.Path   
-                $myReportId_New = $myReportItem.Id_New   
-                if ($null -ne $myReportItem.Id_New) {
-                    $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/DataSources"
-                    $myDescription = [string]::Format("Created By: {0} `n`nCreated Date:{1}", $myReportItem.CreatedBy , $myReportItem.CreatedDate.Replace("T", " ") )
-                    $myHidden = $myReportItem.Hidden
-                    $myBody = [PSCustomObject]@{
-                        "Description" = $myDescription;
-                        "Hidden"      = $myHidden;
-                    } | ConvertTo-Json -Depth 15
+                $myReportId_New = $myReportItem.Id_New 
+                try {  
+                    if ($null -ne $myReportItem.Id_New) {
+                        $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/"
+                        $myDescription = [string]::Format("Created By: {0} `nCreated Date:{1}", $myReportItem.CreatedBy , $myReportItem.CreatedDate.Replace("T", " ") )
+                        $myHidden = $myReportItem.Hidden
+                        $myBody = [PSCustomObject]@{
+                            "Description" = $myDescription;
+                            "Hidden"      = $myHidden;
+                        } | ConvertTo-Json -Depth 15
 
-                    if ($null -ne $Credential) {
-                        Invoke-RestMethod -Method Patch -Uri $myPowerBIReportAPI -Credential $Credential -Body $myBody -ContentType 'application/json; charset=unicode' -UseBasicParsing -Verbose:$false
-                    }
-                    else {
-                        Invoke-RestMethod -Method Patch -Uri $myPowerBIReportAPI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -UseBasicParsing -Verbose:$false
+                        if ($null -ne $Credential) {
+                            Invoke-RestMethod -Method Patch -Uri $myPowerBIReportAPI -Credential $Credential -Body $myBody -ContentType 'application/json; charset=unicode' -UseBasicParsing -Verbose:$false
+                        }
+                        else {
+                            Invoke-RestMethod -Method Patch -Uri $myPowerBIReportAPI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -UseBasicParsing -Verbose:$false
+                        }
                     }
                 }
                 catch {
