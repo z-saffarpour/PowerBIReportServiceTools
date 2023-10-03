@@ -24,7 +24,7 @@ $DestinationReportURI = $myConfiguration.DestinationReportURI
 $DownloadPath = $myConfiguration.DownloadPath
 $UploadPath = $myConfiguration.UploadPath
 $ErrorPath = $myConfiguration.ErrorPath
-$ExportFiles = $myConfiguration.ExportFiles
+$ExportFiles = $true #$myConfiguration.ExportFiles
 
 $myPowerBIReportContentPath = $DownloadPath + '\PowerBIReports'
 $myExcelContentPath = $DownloadPath + '\ExcelWorkbooks'

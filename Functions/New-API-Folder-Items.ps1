@@ -35,7 +35,8 @@ function New-RsFolderItems {
                         $myResponse = Invoke-RestMethod -Method Post -Uri $myFolderURI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false
                     }
     
-                    $myFolderResult.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; "Path" = $myFolderPath; "Id_New" = $myResponse.Id }) | Out-Null    
+                    $myFolderResult.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; "Path" = $myFolderPath; "CreatedBy" = $myFolderItem.CreatedBy; "CreatedDate" = $myFolderItem.CreatedDate; "Hidden" = $myFolderItem.Hidden; "Id_New" = $myResponse.Id }) | Out-Null 
+
                 }
                 catch {
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {

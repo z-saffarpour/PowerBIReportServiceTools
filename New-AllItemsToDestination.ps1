@@ -65,16 +65,20 @@ function New-AllItemsToDestination {
             }
 
             Write-Verbose ('Start getting the folders' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-            $myFolderItems = New-RsFolderItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -FolderItemsJSON $FolderItemsJSON -ErrorFile $ErrorFile -Verbose
+            $myUploadFolderItems = New-RsFolderItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -FolderItemsJSON $FolderItemsJSON -ErrorFile $ErrorFile -Verbose
             Write-Verbose ('end getting the folders' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
             if ($ExportFiles) {
                 $myFolderFile = $UploadPath + '\Folders.json'
-                $myFolderItems | Out-File $myFolderFile
+                $myUploadFolderItems | Out-File $myFolderFile
             }
 
             Write-Verbose ('Start getting the Policy of folders' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-            Grant-RsFolderPolicyItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -UploadFolderItemsJSON $myFolderItems -FolderPolicyItemsJSON $FolderPolicyItemsJSON -ErrorFile $ErrorFile -Verbose
+            Grant-RsFolderPolicyItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -UploadFolderItemsJSON $myUploadFolderItems -FolderPolicyItemsJSON $FolderPolicyItemsJSON -ErrorFile $ErrorFile -Verbose
             Write-Verbose ('end getting the Policy of folders' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+
+            Write-Verbose ('Start getting the set properties of folders' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+            Set-RsFolderPropertiesItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -UploadFolderItemsJSON $myUploadFolderItems -ErrorFile $ErrorFile -Verbose
+            Write-Verbose ('end getting the set properties of folders' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
 
             Write-Verbose ('Start getting the reports(PBI)' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
             $myUploadPBIReportItems = New-RsReportContentItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -PowerBIReportItemsJSON $PowerBIReportItemsJSON -PowerBIReportContentPath $PowerBIReportContentPath -ErrorFile $ErrorFile -Verbose
