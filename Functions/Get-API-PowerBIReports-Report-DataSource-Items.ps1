@@ -2,6 +2,34 @@
 https://app.swaggerhub.com/apis/microsoft-rs/PBIRS/2.0#/PowerBIReports/DataSources
 #>
 function Get-RsPBIReportDataSourceItems {
+    <#
+        .SYNOPSIS
+            This function gets the DataSources that are associated with the specified PowerBIReport.
+
+        .DESCRIPTION
+            This function gets the DataSources that are associated with the specified PowerBIReport.
+
+        .PARAMETER WebPortalURL
+            #Specify the name of the WebPortalURL.
+
+        .PARAMETER Credential
+            Specify the credentials to use when connecting to the Report Server.
+
+        .PARAMETER PowerBIReportItemsJSON
+            Specify the List of PowerBIReport in Json.
+
+        .PARAMETER ErrorFile
+            Specify the path to save the exceptions in the file.
+
+        .EXAMPLE
+            $myPowerBIReportJSON = '[{"Id":"9b073715-a39c-453b-b2eb-2851acbf704e","Name":"Test","Path":"/MobileReport/Test"}]'
+            Get-RsPBIReportDataSourceItems -WebPortalURL "http://localhost/reports" -Credential -PowerBIReportItemsJSON $myPowerBIReportJSON -ErrorFile "C:\Temp\Error_20231003.txt"
+            Description
+            -----------
+            
+        .LINK
+            https://app.swaggerhub.com/apis/microsoft-rs/PBIRS/2.0#/PowerBIReports/GetPowerBIReportDataSources
+    #>
     [CmdletBinding()]
     param 
     (

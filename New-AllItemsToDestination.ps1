@@ -46,7 +46,15 @@ function New-AllItemsToDestination {
         $ErrorFile
         #$ParentPath
     )
-    Process {          
+    Process {    
+        Write-Output ('start of get the system information' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+        $mySystemItems = Get-RsSystem -WebPortalURL $WebPortalURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        Write-Output ('end of get the system information' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+        if ($ExportFiles) {
+            $mySystemFile = $UploadPath + '\System.json'
+            $mySystemItems | Out-File $mySystemFile
+        }
+
         Write-Output ('start of add user to system security' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         Grant-SystemPolicyItems -ReportServerURL $ReportServerURL -Credential $Credential -SystemPolicyItemsJSON $SystemPolicyItemsJSON -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of add user to system security' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))

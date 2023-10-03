@@ -1,4 +1,28 @@
 function Get-SystemPolicy {
+    <#
+        .SYNOPSIS
+            This function retrieves access policies to Power BI Report Server Instance from users/groups.
+
+        .DESCRIPTION
+            This function retrieves access policies to Power BI Report Server Instance from users/groups.
+
+        .PARAMETER ReportServerURL
+            #Specify the name of the ReportServerURL.
+
+        .PARAMETER Credential
+            Specify the credentials to use when connecting to the Report Server.
+
+        .PARAMETER ErrorFile
+            Specify the path to save the exceptions in the file.
+
+        .EXAMPLE
+            Get-SystemPolicy -ReportServerURL "http://localhost/ReportServer" -Credential -ErrorFile "C:\Temp\Error_20231003.txt"
+            Description
+            -----------
+            
+        .LINK
+            
+    #>
     [CmdletBinding()]
     param 
     (

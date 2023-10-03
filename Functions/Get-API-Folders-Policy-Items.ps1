@@ -1,8 +1,33 @@
-﻿<#
-https://app.swaggerhub.com/apis/microsoft-rs/PBIRS/2.0#/Folders
-#>
-
+﻿
 function Get-RsFolderPolicyItems {
+    <#
+        .SYNOPSIS
+            This function gets policies associated with the Folder CatalogItem.
+
+        .DESCRIPTION
+            This function gets policies associated with the Folder CatalogItem.
+
+        .PARAMETER WebPortalURL
+            #Specify the name of the WebPortalURL.
+
+        .PARAMETER Credential
+            Specify the credentials to use when connecting to the Report Server.
+
+        .PARAMETER FolderItemsJSON
+            Specify the List of Folder in Json.
+            
+        .PARAMETER ErrorFile
+            Specify the path to save the exceptions in the file.
+
+        .EXAMPLE
+            $myFolderJSON = '[{"Id":"7c022d2c-1412-40dc-a0ee-02ee4c240a06","Name":"Data Sources","Path":"/Data Sources"}]'
+            Get-RsFolderPolicyItems -WebPortalURL "http://localhost/reports" -Credential -FolderItemsJSON $myFolderJSON -ErrorFile "C:\Temp\Error_20231003.txt"
+            Description
+            -----------
+            
+        .LINK
+            https://app.swaggerhub.com/apis/microsoft-rs/PBIRS/2.0#/Folders/GetFolderPolicies
+    #>  
     [CmdletBinding()]
     param 
     (

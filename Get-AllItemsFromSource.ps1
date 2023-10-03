@@ -23,6 +23,14 @@ function Get-AllItemsFromSource {
         $ErrorFile
     )
     Process {
+        Write-Output ('start of get the system information' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+        $mySystemItems = Get-RsSystem -WebPortalURL $WebPortalURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        Write-Output ('end of get the system information' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+        if ($ExportFiles) {
+            $mySystemFile = $DownloadPath + '\System.json'
+            $mySystemItems | Out-File $mySystemFile
+        }
+
         Write-Output ('start of get the System policies' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         $mySystemPolicyItems = Get-SystemPolicy -ReportServerURL $ReportServerURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the system of policies' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
