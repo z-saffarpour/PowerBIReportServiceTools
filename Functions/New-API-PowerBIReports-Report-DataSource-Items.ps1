@@ -47,6 +47,9 @@ function New-RsReportDataSourceItems {
                                 if ($null -ne $myReportCredentialItem) {
                                     $myUploadDataSourceItem.DataModelDataSource.Username = $myReportCredentialItem.CredentialUsername
                                     $myUploadDataSourceItem.DataModelDataSource.Secret = $myReportCredentialItem.CredentialPassword
+                                    if ($myUploadDataSourceItem.DataModelDataSource.Kind -eq "AnalysisServices") {
+                                        $myUploadDataSourceItem.DataModelDataSource.AuthType = "Impersonate"
+                                    }
                                 }
                                 else {
                                     $myUploadDataSourceItem.DataModelDataSource.Username = $myDataSourceItem.DataModelDataSource.Username
