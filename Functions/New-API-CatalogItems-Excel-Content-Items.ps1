@@ -16,17 +16,19 @@ function New-RsExcelContentItems {
         $ErrorFile
     )
     Begin {
+        $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
+        $myExcelResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
             $myExcelItems = $ExcelItemsJSON | ConvertFrom-Json
-            $myExcelResultItems = New-Object System.Collections.ArrayList
-
             foreach ($myExcelItem in $myExcelItems) {
                 $myExcelId = $myExcelItem.Id
                 $myExcelName = $myExcelItem.Name
                 $myExcelPath = $myExcelItem.Path    
                 try {
-                    $myExcelFile = $ExcelContentPath + $myExcelPath.Substring(0 , $myExcelPath.LastIndexOf($myExcelName))+ '/' + $myExcelName
+                    $myExcelFile = $ExcelContentPath + $myExcelPath.Substring(0 , $myExcelPath.LastIndexOf($myExcelName)) + '/' + $myExcelName
                     $myExcelBytes = [System.IO.File]::ReadAllBytes($myExcelFile)
                     $myExcelContent = [System.Convert]::ToBase64String($myExcelBytes)
                     $myBody = @{
@@ -52,12 +54,11 @@ function New-RsExcelContentItems {
                         "Excel Name : $myExcelName"  >> $ErrorFile
                         "Excel Path : $myExcelPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   Upload Excel ==>> " + $myExcelResultItems.Count + " Of " + $myExcelItems.Count)
+                    Write-Verbose ("   Upload Excel Content ==>> " + $myExcelResultItems.Count + " Of " + $myExcelItems.Count)
                 }
             }
             $myResultJSON = $myExcelResultItems | ConvertTo-Json -Depth 15
@@ -67,7 +68,6 @@ function New-RsExcelContentItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : New-RsExcelContentItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

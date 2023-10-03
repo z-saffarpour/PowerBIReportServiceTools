@@ -16,10 +16,13 @@ function Grant-RsFolderPolicyItems {
         $ErrorFile
     )
     Begin {
+        $myFolderResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myFolderItems = $UploadFolderItemsJSON | ConvertFrom-Json
             $myFolderPolicyItems = $FolderPolicyItemsJSON | ConvertFrom-Json
-            $myFolderResultItems = New-Object System.Collections.ArrayList
             foreach ($myFolderItem in $myFolderItems) {
                 $myFolderId = $myFolderItem.Id
                 $myFolderName = $myFolderItem.Name
@@ -54,8 +57,7 @@ function Grant-RsFolderPolicyItems {
                         "Folder Name : $myFolderName"  >> $ErrorFile
                         "Folder Path : $myFolderPath"  >> $ErrorFile
                         "Folder Id_New : $myFolderId_New"  >> $ErrorFile
-                        $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
+                        $_ >> $ErrorFile
                         $mySpliter >> $ErrorFile 
                     }
                 }
@@ -68,7 +70,6 @@ function Grant-RsFolderPolicyItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Grant-RsFolderPolicyItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

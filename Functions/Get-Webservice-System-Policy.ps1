@@ -9,9 +9,12 @@ function Get-SystemPolicy {
         $ErrorFile
     )
     Begin {
+        $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
+        $mySystemPolicyItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
-            $mySystemPolicyItems = New-Object System.Collections.ArrayList
             if ($null -ne $Credential) {
                 $myProxy = New-WebServiceProxy -Class 'GetRS' -Namespace 'GetRS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
             }
@@ -33,7 +36,6 @@ function Get-SystemPolicy {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-SystemPolicy" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

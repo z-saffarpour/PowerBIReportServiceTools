@@ -14,8 +14,11 @@ function Get-RsPBIReportPolicyItems {
         $ErrorFile
     )
     Begin {
+        $myReportPolicyItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myReportPolicyItems = New-Object System.Collections.ArrayList
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
@@ -46,12 +49,11 @@ function Get-RsPBIReportPolicyItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   Policy ==>> " + $myReportPolicyItems.Count + " Of " + $myReportItems.Count)
+                    Write-Verbose ("   Get PBIReport Policy ==>> " + $myReportPolicyItems.Count + " Of " + $myReportItems.Count)
                 }
             }
             $myResultJSON = $myReportPolicyItems | ConvertTo-Json -Depth 15
@@ -60,8 +62,7 @@ function Get-RsPBIReportPolicyItems {
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsPBIReportPolicyItems" >> $ErrorFile
-                $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
+                $_ >> $ErrorFile
                 $mySpliter >> $ErrorFile 
             }
         }

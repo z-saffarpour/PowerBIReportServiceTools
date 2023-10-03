@@ -1,10 +1,15 @@
+param 
+(
+    [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)] 
+    $ScriptPath 
+)
 clear-host
 ##--==============================================================================================================
-$ScriptRoot = "C:\Source_GitHub\PowerBIReportServiceTools"
+#$ScriptRoot = "C:\Source_GitHub\PowerBIReportServiceTools"
+$ScriptRoot = $ScriptPath
 $ConfigurationFile = ".\Configuration.json"
-$myScriptItems =  Get-ChildItem "$ScriptRoot\Functions" -Recurse -Include *.ps1
-foreach ($myScriptItem in $myScriptItems) 
-{ 
+$myScriptItems = Get-ChildItem "$ScriptRoot\Functions" -Recurse -Include *.ps1
+foreach ($myScriptItem in $myScriptItems) { 
     $myScriptItem.FullName
     . $myScriptItem.FullName
 }
@@ -14,11 +19,11 @@ foreach ($myScriptItem in $myScriptItems)
 $myConfiguration = Get-Content $ConfigurationFile -Raw | ConvertFrom-Json
 
 $SourceUser = $myConfiguration.SourceUser
-$SourcePassword= $myConfiguration.SourcePassword
+$SourcePassword = $myConfiguration.SourcePassword
 $SourceReportURI = $myConfiguration.SourceReportURI
 
 $DestinationUser = $myConfiguration.DestinationUser
-$DestinationPassword= $myConfiguration.DestinationPassword
+$DestinationPassword = $myConfiguration.DestinationPassword
 $DestinationReportURI = $myConfiguration.DestinationReportURI
 
 $DownloadPath = $myConfiguration.DownloadPath
@@ -26,34 +31,46 @@ $UploadPath = $myConfiguration.UploadPath
 $ErrorPath = $myConfiguration.ErrorPath
 $ExportFiles = $true #$myConfiguration.ExportFiles
 
+if (!(Test-Path -Path $ErrorPath)) {
+    New-Item -ItemType Directory -Path $ErrorPath | Out-Null
+}
+
+if (!(Test-Path -Path $DownloadPath)) {
+    New-Item -ItemType Directory -Path $DownloadPath | Out-Null
+}
+
+if (!(Test-Path -Path $UploadPath)) {
+    New-Item -ItemType Directory -Path $UploadPath | Out-Null
+}
+
 $myPowerBIReportContentPath = $DownloadPath + '\PowerBIReports'
 $myExcelContentPath = $DownloadPath + '\ExcelWorkbooks'
 $myResourceContentPath = $DownloadPath + '\Resources'
-
 $ErrorFile = $ErrorPath + "\ErrorFile_" + (Get-Date -Format "yyyy-MM-dd_HH-mm-ss") + ".txt"
 ##--==============================================================================================================
-$mySourcePasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $SourcePassword
-[System.Management.Automation.PSCredential]$mySourceCredential = New-Object PSCredential($SourceUser,$mySourcePasswordSecure )
 $mySourceReportServiceURI = "$SourceReportURI/ReportServer"
 $mySourceReportRestAPIURI = "$SourceReportURI/reports"
+
+$mySourcePasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $SourcePassword
+[System.Management.Automation.PSCredential]$mySourceCredential = New-Object PSCredential($SourceUser, $mySourcePasswordSecure )
 
 Write-Host ('Start All Items From Source' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green
 
 Get-AllItemsFromSource -ReportServiceURI $mySourceReportServiceURI -ReportRestAPIURI $mySourceReportRestAPIURI -Credential $mySourceCredential `
--DownloadPath $DownloadPath `
--PowerBIReportContentPath $myPowerBIReportContentPath `
--ExcelContentPath $myExcelContentPath `
--ResourceContentPath $myResourceContentPath `
--ExportFiles $ExportFiles `
--ErrorFile $ErrorFile `
--Verbose
+    -DownloadPath $DownloadPath `
+    -PowerBIReportContentPath $myPowerBIReportContentPath `
+    -ExcelContentPath $myExcelContentPath `
+    -ResourceContentPath $myResourceContentPath `
+    -ExportFiles $ExportFiles `
+    -ErrorFile $ErrorFile 
 
 Write-Host ('end All Items From Source' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green
 ##--==============================================================================================================
-$myDestinationPasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $DestinationPassword
-[System.Management.Automation.PSCredential]$myDestinationCredential = New-Object PSCredential($DestinationUser,$myDestinationPasswordSecure )
 $myDestinationReportServiceURI = "$DestinationReportURI/ReportServer"
 $myDestinationeReportRestAPIURI = "$DestinationReportURI/reports"
+
+$myDestinationPasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $DestinationPassword
+[System.Management.Automation.PSCredential]$myDestinationCredential = New-Object PSCredential($DestinationUser, $myDestinationPasswordSecure )
 
 $mySystemPoliciesFile = $DownloadPath + '\System_Policies.json'
 $mySystemPolicyJSON = Get-Content -Path $mySystemPoliciesFile -Raw
@@ -92,23 +109,22 @@ $myResourceJSON = Get-Content -Path $myResourceFile -Raw
 
 Write-Host ('Start Upload All Items to Destination' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green
 New-AllItemsToDestination -ReportServiceURI $myDestinationReportServiceURI -ReportRestAPIURI $myDestinationeReportRestAPIURI -Credential $myDestinationCredential `
--SystemPolicyItemsJSON $mySystemPolicyJSON `
--SystemScheduleItemsJSON $mySystemScheduleJSON `
--FolderItemsJSON $myFolderJSON `
--FolderPolicyItemsJSON $myFolderPolicyJSON `
--PowerBIReportItemsJSON $myPowerBIReportJSON `
--PowerBIReportPolicyItemsJSON $myPowerReportPolicyJSON `
--PowerBIReportDataSourceItemsJSON $myPowerReportDataSourceJSON `
--PowerBIReportCredentialItemsJSON $myPowerReportCredentialJSON `
--PowerBIReportScheduleItemsJSON $myPowerReportScheduleJSON `
--PowerBIReportRowLevelSecurityItemsJSON $myPowerReportRowLevelSecurityJSON `
--ExcelItemsJSON $myExcelJSON `
--ResourceItemsJSON $myResourceJSON `
--PowerBIReportContentPath $myPowerBIReportContentPath `
--ExcelContentPath $myExcelContentPath `
--ResourceContentPath $myResourceContentPath `
--UploadPath $UploadPath `
--ExportFiles $ExportFiles `
--ErrorFile $ErrorFile `
--Verbose
+    -SystemPolicyItemsJSON $mySystemPolicyJSON `
+    -SystemScheduleItemsJSON $mySystemScheduleJSON `
+    -FolderItemsJSON $myFolderJSON `
+    -FolderPolicyItemsJSON $myFolderPolicyJSON `
+    -PowerBIReportItemsJSON $myPowerBIReportJSON `
+    -PowerBIReportPolicyItemsJSON $myPowerReportPolicyJSON `
+    -PowerBIReportDataSourceItemsJSON $myPowerReportDataSourceJSON `
+    -PowerBIReportCredentialItemsJSON $myPowerReportCredentialJSON `
+    -PowerBIReportScheduleItemsJSON $myPowerReportScheduleJSON `
+    -PowerBIReportRowLevelSecurityItemsJSON $myPowerReportRowLevelSecurityJSON `
+    -ExcelItemsJSON $myExcelJSON `
+    -ResourceItemsJSON $myResourceJSON `
+    -PowerBIReportContentPath $myPowerBIReportContentPath `
+    -ExcelContentPath $myExcelContentPath `
+    -ResourceContentPath $myResourceContentPath `
+    -UploadPath $UploadPath `
+    -ExportFiles $ExportFiles `
+    -ErrorFile $ErrorFile 
 Write-Host ('End Upload All Items to Destination' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green

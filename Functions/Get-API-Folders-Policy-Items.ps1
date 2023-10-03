@@ -15,8 +15,11 @@ function Get-RsFolderPolicyItems {
         $ErrorFile
     )
     Begin {
+        $myFolderPolicyItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myFolderPolicyItems = New-Object System.Collections.ArrayList
             $myFolderItems = $FolderItemsJSON | ConvertFrom-Json 
             foreach ($myFolderItem in $myFolderItems) {
                 $myFolderId = $myFolderItem.Id
@@ -45,9 +48,11 @@ function Get-RsFolderPolicyItems {
                         "Folder Id : $myFolderId"  >> $ErrorFile
                         "Folder Name : $myFolderName"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
+                }
+                finally {
+                    Write-Verbose ("   Get Folder Policy ==>> " + $myFolderPolicyItems.Count + " Of " + $myFolderItems.Count)
                 }
             }
             $myResultJSON = $myFolderPolicyItems | ConvertTo-Json -Depth 15 
@@ -57,7 +62,6 @@ function Get-RsFolderPolicyItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsFolderPolicyItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

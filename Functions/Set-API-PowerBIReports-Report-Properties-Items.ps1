@@ -14,9 +14,12 @@ function Set-RsReportPropertiesItems {
         $ErrorFile
     )
     Begin {
+        $myReportResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myReportItems = $UploadPowerBIReportItemsJSON | ConvertFrom-Json
-            $myReportResultItems = New-Object System.Collections.ArrayList
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
                 $myReportName = $myReportItem.Name
@@ -39,6 +42,7 @@ function Set-RsReportPropertiesItems {
                             Invoke-RestMethod -Method Patch -Uri $myPowerBIReportAPI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -UseBasicParsing -Verbose:$false
                         }
                     }
+                    $myReportResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; }) | Out-Null
                 }
                 catch {
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
@@ -47,19 +51,18 @@ function Set-RsReportPropertiesItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
+                finally {
+                    Write-Verbose ("   Set Properties For Report ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
+                }
             }
-            $myReportResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; }) | Out-Null
-            Write-Verbose ("   Set Properties For Report ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
         }
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Set-RsReportPropertiesItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

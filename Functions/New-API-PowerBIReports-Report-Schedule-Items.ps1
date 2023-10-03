@@ -16,11 +16,14 @@ function New-RsReportScheduleItems {
         $ErrorFile
     )
     Begin {
+        $myCacheRefreshPlanAPI = $ReportRestAPIURI + "/api/v2.0/CacheRefreshPlans"
+        $myReportScheduleResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myUploadSystemScheduleItems = $UploadSystemScheduleItemsJSON | ConvertFrom-Json
             $myReportScheduleItems = $PowerBIReportScheduleItemsJSON | ConvertFrom-Json
-            $myReportScheduleResultItems = New-Object System.Collections.ArrayList
-            $myCacheRefreshPlanAPI = $ReportRestAPIURI + "/api/v2.0/CacheRefreshPlans"
             foreach ($myReportScheduleItem in $myReportScheduleItems) {
                 $myReportId = $myReportScheduleItem.ReportId
                 $myReportName = $myReportScheduleItem.Name
@@ -68,12 +71,12 @@ function New-RsReportScheduleItems {
                                     "Report Name : $myReportName"  >> $ErrorFile
                                     "Report Path : $myReportPath"  >> $ErrorFile
                                     $_ >> $ErrorFile  
-                                    $mySpliter = ("--" + ("==" * 70))
                                     $mySpliter >> $ErrorFile 
                                 }
                             }
                         }
                     }
+                    $myReportScheduleResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; }) | Out-Null
                 }
                 catch {            
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
@@ -82,12 +85,10 @@ function New-RsReportScheduleItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    $myReportScheduleResultItems.Add([PSCustomObject]@{"Id" = $myReportId; "Name" = $myReportName; "Path" = $myReportPath; }) | Out-Null
                     Write-Verbose ("   Set Schedule For Report ==>> " + $myReportScheduleResultItems.Count + " Of " + $myReportScheduleItems.Count)
                 }
             }
@@ -95,8 +96,7 @@ function New-RsReportScheduleItems {
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : New-RsReportScheduleItems" >> $ErrorFile
-                $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
+                $_ >> $ErrorFile
                 $mySpliter >> $ErrorFile 
             }
         }

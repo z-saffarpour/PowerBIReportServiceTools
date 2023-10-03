@@ -16,17 +16,19 @@ function New-RsResourceContentItems {
         $ErrorFile
     )
     Begin {
+        $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
+        $myResourceResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
             $myResourceItems = $ResourceItemsJSON | ConvertFrom-Json
-            $myResourceResultItems = New-Object System.Collections.ArrayList
-
             foreach ($myResourceItem in $myResourceItems) {
                 $myResourceId = $myResourceItem.Id
                 $myResourceName = $myResourceItem.Name
                 $myResourcePath = $myResourceItem.Path    
                 try {
-                    $myResourceFile = $ResourceContentPath + $myResourcePath.Substring(0 , $myResourcePath.LastIndexOf($myResourceName))+ '/' + $myResourceName
+                    $myResourceFile = $ResourceContentPath + $myResourcePath.Substring(0 , $myResourcePath.LastIndexOf($myResourceName)) + '/' + $myResourceName
                     $myResourceBytes = [System.IO.File]::ReadAllBytes($myResourceFile)
                     $myResourceContent = [System.Convert]::ToBase64String($myResourceBytes)
                     $myBody = @{
@@ -52,12 +54,11 @@ function New-RsResourceContentItems {
                         "Resource Name : $myResourceName"  >> $ErrorFile
                         "Resource Path : $myResourcePath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   Upload Resource ==>> " + $myResourceResultItems.Count + " Of " + $myResourceItems.Count)
+                    Write-Verbose ("   Upload Resource Content ==>> " + $myResourceResultItems.Count + " Of " + $myResourceItems.Count)
                 }
             }
             $myResultJSON = $myResourceResultItems | ConvertTo-Json -Depth 15
@@ -67,7 +68,6 @@ function New-RsResourceContentItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : New-RsResourceContentItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

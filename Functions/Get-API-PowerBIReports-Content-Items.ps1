@@ -16,9 +16,12 @@ function Get-RsPBIReportContentItems {
         $ErrorFile
     )
     Begin {
+        $myReportResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
-            $myReportResultItems = New-Object System.Collections.ArrayList
             if (!(Test-Path -Path $PowerBIReportContentPath)) {
                 New-Item -ItemType Directory -Path $PowerBIReportContentPath | Out-Null
             }
@@ -48,12 +51,11 @@ function Get-RsPBIReportContentItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   PBIReportContent ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
+                    Write-Verbose ("   Download PBIReport Content ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
                 }
             }
         }
@@ -61,7 +63,6 @@ function Get-RsPBIReportContentItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsPBIContentItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

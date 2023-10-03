@@ -14,9 +14,12 @@ function Set-RsFolderPropertiesItems {
         $ErrorFile
     )
     Begin {
+        $myFolderResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myFolderItems = $UploadFolderItemsJSON | ConvertFrom-Json
-            $myFolderResultItems = New-Object System.Collections.ArrayList
             foreach ($myFolderItem in $myFolderItems) {
                 $myFolderId = $myFolderItem.Id
                 $myFolderName = $myFolderItem.Name
@@ -27,7 +30,7 @@ function Set-RsFolderPropertiesItems {
                         $myFolderAPI = $ReportRestAPIURI + "/api/v2.0/Folders(" + $myFolderId_New + ")/"
                         $myHidden = $myFolderItem.Hidden
                         $myBody = [PSCustomObject]@{
-                            "Hidden"      = $myHidden;
+                            "Hidden" = $myHidden;
                         } | ConvertTo-Json -Depth 15
 
                         if ($null -ne $Credential) {
@@ -37,6 +40,7 @@ function Set-RsFolderPropertiesItems {
                             Invoke-RestMethod -Method Patch -Uri $myFolderAPI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -UseBasicParsing -Verbose:$false
                         }
                     }
+                    $myFolderResultItems.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; "Path" = $myFolderPath; }) | Out-Null
                 }
                 catch {
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
@@ -45,19 +49,18 @@ function Set-RsFolderPropertiesItems {
                         "Folder Name : $myFolderName"  >> $ErrorFile
                         "Folder Path : $myFolderPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
+                finally {
+                    Write-Verbose ("   Set Properties For Folder ==>> " + $myFolderResultItems.Count + " Of " + $myFolderItems.Count)
+                }
             }
-            $myFolderResultItems.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; "Path" = $myFolderPath; }) | Out-Null
-            Write-Verbose ("   Set Properties For Folder ==>> " + $myFolderResultItems.Count + " Of " + $myFolderItems.Count)
         }
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Set-RsFolderPropertiesItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

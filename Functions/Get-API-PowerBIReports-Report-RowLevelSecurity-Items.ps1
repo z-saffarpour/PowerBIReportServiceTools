@@ -14,9 +14,12 @@ function Get-RsPBIReportRLSItems {
         $ErrorFile
     )
     Begin {
+        $myReportRowLevelSecurityItems = New-Object System.Collections.ArrayList
+        $myReportResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myReportRowLevelSecurityItems = New-Object System.Collections.ArrayList
-            $myReportResultItems = New-Object System.Collections.ArrayList
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
@@ -43,12 +46,11 @@ function Get-RsPBIReportRLSItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("    RowLevelSecurity ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
+                    Write-Verbose ("   Get PBIReport RowLevelSecurity ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
                 }
             }
             $myResultJSON = $myReportRowLevelSecurityItems | ConvertTo-Json -Depth 15
@@ -57,8 +59,7 @@ function Get-RsPBIReportRLSItems {
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsPBIReportRLSItems" >> $ErrorFile
-                $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
+                $_ >> $ErrorFile
                 $mySpliter >> $ErrorFile 
             }
         }

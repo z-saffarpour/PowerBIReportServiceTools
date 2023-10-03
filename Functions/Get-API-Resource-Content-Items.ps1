@@ -16,9 +16,12 @@ function Get-RsResourceContentItems {
         $ErrorFile
     )
     Begin {
+        $myResourceResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myResourceItems = $ResourceItemsJSON | ConvertFrom-Json 
-            $myResourceResultItems = New-Object System.Collections.ArrayList
             if (!(Test-Path -Path $ResourceContentPath)) {
                 New-Item -ItemType Directory -Path $ResourceContentPath | Out-Null
             }
@@ -48,20 +51,18 @@ function Get-RsResourceContentItems {
                         "Resource Name : $myResourceName"  >> $ErrorFile
                         "Resource Path : $myResourcePath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   ResourceContent ==>> " + $myResourceResultItems.Count + " Of " + $myResourceItems.Count)
+                    Write-Verbose ("   Download Resource Content ==>> " + $myResourceResultItems.Count + " Of " + $myResourceItems.Count)
                 }
             }
         }
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsResourceContentItems" >> $ErrorFile
-                $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
+                $_ >> $ErrorFile
                 $mySpliter >> $ErrorFile 
             }
         }

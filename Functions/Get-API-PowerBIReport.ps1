@@ -12,8 +12,11 @@ function Get-RsPBIReport {
         $ErrorFile
     )
     Begin {
+        $myPBIReportAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports'
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myPBIReportAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports'
             if ($null -ne $Credential) {
                 $myResponse = Invoke-RestMethod -Method Get -Uri $myPBIReportAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
             }
@@ -27,7 +30,6 @@ function Get-RsPBIReport {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsPBIReport" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         } 

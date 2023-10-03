@@ -12,8 +12,11 @@ function Get-RsSystem {
         $ErrorFile
     )
     Begin {
+        $mySystemAPI = $ReportRestAPIURI + '/api/v2.0/system'
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $mySystemAPI = $ReportRestAPIURI + '/api/v2.0/system'
             if ($null -ne $Credential) {
                 $myResponse = Invoke-RestMethod -Method Get -Uri $mySystemAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
             }
@@ -27,7 +30,6 @@ function Get-RsSystem {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsSystem" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         } 

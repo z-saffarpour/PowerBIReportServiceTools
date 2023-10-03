@@ -14,8 +14,11 @@ function Get-RsPBIReportScheduleItems {
         $ErrorFile
     )
     Begin {
+        $myReportScheduleItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myReportScheduleItems = New-Object System.Collections.ArrayList
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
@@ -38,13 +41,12 @@ function Get-RsPBIReportScheduleItems {
                         "Report Id : $myReportId"  >> $ErrorFile
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
-                        $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
+                        $_ >> $ErrorFile
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   Schedule ==>> " + $myReportScheduleItems.Count + " Of " + $myReportItems.Count)
+                    Write-Verbose ("    Get PBIReport Schedule ==>> " + $myReportScheduleItems.Count + " Of " + $myReportItems.Count)
                 }
             }
             $myResultJSON = $myReportScheduleItems | ConvertTo-Json -Depth 15 
@@ -53,8 +55,7 @@ function Get-RsPBIReportScheduleItems {
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsPBIReportScheduleItems" >> $ErrorFile
-                $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
+                $_ >> $ErrorFile
                 $mySpliter >> $ErrorFile 
             }
         }

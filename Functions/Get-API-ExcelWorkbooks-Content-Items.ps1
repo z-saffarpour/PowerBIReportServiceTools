@@ -16,9 +16,12 @@ function Get-RsExcelContentItems {
         $ErrorFile
     )
     Begin {
+        $myExcelResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $myExcelItems = $ExcelItemsJSON | ConvertFrom-Json 
-            $myExcelResultItems = New-Object System.Collections.ArrayList
             if (!(Test-Path -Path $ExcelContentPath)) {
                 New-Item -ItemType Directory -Path $ExcelContentPath | Out-Null
             }
@@ -48,12 +51,11 @@ function Get-RsExcelContentItems {
                         "Excel Name : $myExcelName"  >> $ErrorFile
                         "Excel Path : $myExcelPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   ExcelContent ==>> " + $myExcelResultItems.Count + " Of " + $myExcelItems.Count)
+                    Write-Verbose ("   Download Excel Content ==>> " + $myExcelResultItems.Count + " Of " + $myExcelItems.Count)
                 }
             }
         }
@@ -61,7 +63,6 @@ function Get-RsExcelContentItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsExcelContentItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

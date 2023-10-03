@@ -16,17 +16,19 @@ function New-RsReportContentItems {
         $ErrorFile
     )
     Begin {
+        $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
+        $myReportResultItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json
-            $myReportResultItems = New-Object System.Collections.ArrayList
-
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
                 $myReportName = $myReportItem.Name
                 $myReportPath = $myReportItem.Path    
                 try {
-                    $myReportFile = $PowerBIReportContentPath + $myReportPath.Substring(0 , $myReportPath.LastIndexOf($myReportName))+ '/' + $myReportName + '.pbix' 
+                    $myReportFile = $PowerBIReportContentPath + $myReportPath.Substring(0 , $myReportPath.LastIndexOf($myReportName)) + '/' + $myReportName + '.pbix' 
                     $myReportBytes = [System.IO.File]::ReadAllBytes($myReportFile)
                     $myReportContent = [System.Convert]::ToBase64String($myReportBytes)
                     $myBody = @{
@@ -52,12 +54,11 @@ function New-RsReportContentItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   Upload PBIReport ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
+                    Write-Verbose ("   Upload PBIReport Content ==>> " + $myReportResultItems.Count + " Of " + $myReportItems.Count)
                 }
             }
             $myResultJSON = $myReportResultItems | ConvertTo-Json -Depth 15
@@ -67,7 +68,6 @@ function New-RsReportContentItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : New-RsReportContentItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

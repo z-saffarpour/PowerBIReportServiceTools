@@ -14,8 +14,11 @@ function Get-RsPBIReportDataSourceItems {
         $ErrorFile
     )
     Begin {
+        $myReportDataSourceItems = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myReportDataSourceItems = New-Object System.Collections.ArrayList
             $myReportItems = $PowerBIReportItemsJSON | ConvertFrom-Json 
             foreach ($myReportItem in $myReportItems) {
                 $myReportId = $myReportItem.Id
@@ -40,12 +43,11 @@ function Get-RsPBIReportDataSourceItems {
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
                 finally {
-                    Write-Verbose ("   DataSource ==>> " + $myReportDataSourceItems.Count + " Of " + $myReportItems.Count)
+                    Write-Verbose ("   Get PBIReport DataSource ==>> " + $myReportDataSourceItems.Count + " Of " + $myReportItems.Count)
                 }
             }
             $myResultJSON = $myReportDataSourceItems | ConvertTo-Json -Depth 15   
@@ -54,8 +56,7 @@ function Get-RsPBIReportDataSourceItems {
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Get-RsPBIReportDataSourceItems" >> $ErrorFile
-                $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
+                $_ >> $ErrorFile
                 $mySpliter >> $ErrorFile 
             }
         } 

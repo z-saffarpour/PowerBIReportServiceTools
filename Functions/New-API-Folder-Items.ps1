@@ -14,10 +14,13 @@ function New-RsFolderItems {
         $ErrorFile
     )
     Begin {
+        $myFolderURI = $ReportRestAPIURI + "/api/v2.0/Folders"
+        $myFolderResult = New-Object System.Collections.ArrayList
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
-            $myFolderURI = $ReportRestAPIURI + "/api/v2.0/Folders"
             $myFolderItems = $FolderItemsJSON | ConvertFrom-Json 
-            $myFolderResult = New-Object System.Collections.ArrayList
             foreach ($myFolderItem in $myFolderItems) {
                 $myFolderId = $myFolderItem.Id
                 $myFolderName = $myFolderItem.Name
@@ -33,10 +36,8 @@ function New-RsFolderItems {
                     }
                     else {
                         $myResponse = Invoke-RestMethod -Method Post -Uri $myFolderURI -UseDefaultCredentials -Body $myBody -ContentType 'application/json; charset=unicode' -Verbose:$false
-                    }
-    
+                    }    
                     $myFolderResult.Add([PSCustomObject]@{"Id" = $myFolderId; "Name" = $myFolderName; "Path" = $myFolderPath; "CreatedBy" = $myFolderItem.CreatedBy; "CreatedDate" = $myFolderItem.CreatedDate; "Hidden" = $myFolderItem.Hidden; "Id_New" = $myResponse.Id }) | Out-Null 
-
                 }
                 catch {
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
@@ -45,7 +46,6 @@ function New-RsFolderItems {
                         "Folder Name : $myFolderName"  >> $ErrorFile
                         "Folder Path : $myFolderPath"  >> $ErrorFile
                         $_ >> $ErrorFile  
-                        $mySpliter = ("--" + ("==" * 70))
                         $mySpliter >> $ErrorFile 
                     }
                 }
@@ -60,7 +60,6 @@ function New-RsFolderItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : New-RsFolderItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }

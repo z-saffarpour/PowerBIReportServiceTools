@@ -11,9 +11,12 @@ function Grant-SystemPolicyItems {
         $ErrorFile
     )
     Begin {
+        $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
+        $mySpliter = ("--" + ("==" * 70))
+    }
+    Process {
         try {
             $mySystemPolicyItems = $SystemPolicyItemsJSON | ConvertFrom-Json
-            $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
             if ($null -ne $Credential) {
                 $myProxy = New-WebServiceProxy -Class 'GrantRS' -Namespace 'GrantRS' -Uri $myProxyURI -Credential $Credential -Verbose:$false
             }
@@ -66,7 +69,6 @@ function Grant-SystemPolicyItems {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
                 "Function : Grant-SystemPolicyItems" >> $ErrorFile
                 $_ >> $ErrorFile  
-                $mySpliter = ("--" + ("==" * 70))
                 $mySpliter >> $ErrorFile 
             }
         }
