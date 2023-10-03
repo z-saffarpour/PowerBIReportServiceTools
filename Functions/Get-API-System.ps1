@@ -6,13 +6,13 @@ function Get-RsSystem {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential]
         $Credential,
         $ErrorFile
     )
     Begin {
-        $mySystemAPI = $ReportRestAPIURI + '/api/v2.0/system'
+        $mySystemAPI = $WebPortalURL + '/api/v2.0/system'
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {

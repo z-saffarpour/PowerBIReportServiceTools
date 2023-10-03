@@ -6,7 +6,7 @@ function Get-RsResourceContentItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -30,7 +30,7 @@ function Get-RsResourceContentItems {
                 $myResourceName = $myResourceItem.Name
                 $myResourcePath = $myResourceItem.Path
                 try {
-                    $myResourceContentAPI = $ReportRestAPIURI + '/api/v2.0/Resources(' + $myResourceId + ')/Content/$value'
+                    $myResourceContentAPI = $WebPortalURL + '/api/v2.0/Resources(' + $myResourceId + ')/Content/$value'
                     $myResourceDirectory = $ResourceContentPath + $myResourcePath.Substring(0 , $myResourcePath.LastIndexOf($myResourceName))
                     $myResourceContentFile = $myResourceDirectory + '\' + $myResourceName    
                     if (!(Test-Path -Path $myResourceDirectory)) {

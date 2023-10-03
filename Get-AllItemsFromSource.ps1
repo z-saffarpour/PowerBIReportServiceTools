@@ -3,9 +3,9 @@ function Get-AllItemsFromSource {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]  
-        $ReportServiceURI,
+        $ReportServerURL,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -24,7 +24,7 @@ function Get-AllItemsFromSource {
     )
     Process {
         Write-Output ('start of get the System policies' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $mySystemPolicyItems = Get-SystemPolicy -ReportServiceURI $ReportServiceURI -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        $mySystemPolicyItems = Get-SystemPolicy -ReportServerURL $ReportServerURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the system of policies' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $mySystemPoliciesFile = $DownloadPath + '\System_Policies.json'
@@ -32,7 +32,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of getting the Shared schedule' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $mySystemScheduleItems = Get-SystemSchedule -ReportServiceURI $ReportServiceURI -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        $mySystemScheduleItems = Get-SystemSchedule -ReportServerURL $ReportServerURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end getting the Shared schedule' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $mySystemScheduleFile = $DownloadPath + '\System_Schedules.json'
@@ -40,7 +40,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of folder' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myFolderItems = Get-RSFolder -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        $myFolderItems = Get-RSFolder -WebPortalURL $WebPortalURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of folder' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myFolderFile = $DownloadPath + '\Folders.json'
@@ -48,7 +48,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of security by folder' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myFolderPolicyItems = Get-RsFolderPolicyItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -FolderItemsJSON $myFolderItems -ErrorFile $ErrorFile -Verbose
+        $myFolderPolicyItems = Get-RsFolderPolicyItems -WebPortalURL $WebPortalURL -Credential $Credential -FolderItemsJSON $myFolderItems -ErrorFile $ErrorFile -Verbose
         Write-Output ('end  get the list of security by folder' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myFolderPolicyFile = $DownloadPath + '\Folder_Policies.json'
@@ -56,7 +56,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myPBIReportItems = Get-RsPBIReport -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        $myPBIReportItems = Get-RsPBIReport -WebPortalURL $WebPortalURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myPBIReportFile = $DownloadPath + '\PowerBIReports.json'
@@ -64,7 +64,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of security by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myPBIReportPolicyItems = Get-RsPBIReportPolicyItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
+        $myPBIReportPolicyItems = Get-RsPBIReportPolicyItems -WebPortalURL $WebPortalURL -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of security by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myPBIReportPolicyFile = $DownloadPath + '\PowerBIReports_Policies.json'
@@ -72,7 +72,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of data source by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myPBIReportDataSourceItems = Get-RsPBIReportDataSourceItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
+        $myPBIReportDataSourceItems = Get-RsPBIReportDataSourceItems -WebPortalURL $WebPortalURL -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of data source by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myPBIReportDataSourceFile = $DownloadPath + '\PowerBIReports_DataSources.json'
@@ -80,7 +80,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of row level security by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myPBIReportRowLevelSecurityItems = Get-RsPBIReportRLSItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
+        $myPBIReportRowLevelSecurityItems = Get-RsPBIReportRLSItems -WebPortalURL $WebPortalURL -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of row level security by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myReportRowLevelSecurityFile = $DownloadPath + '\PowerBIReports_RowLevelSecurity.json'
@@ -88,7 +88,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of get the list of schedule by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myPBIReportScheduleItems = Get-RsPBIReportScheduleItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
+        $myPBIReportScheduleItems = Get-RsPBIReportScheduleItems -WebPortalURL $WebPortalURL -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of schedule by PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myPBIReportScheduleFile = $DownloadPath + '\PowerBIReports_Schedule.json'
@@ -96,11 +96,11 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of download PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        Get-RsPBIReportContentItems -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -PowerBIReportContentPath $PowerBIReportContentPath -ErrorFile $ErrorFile -Verbose
+        Get-RsPBIReportContentItems -WebPortalURL $WebPortalURL -Credential $Credential -PowerBIReportItemsJSON $myPBIReportItems -PowerBIReportContentPath $PowerBIReportContentPath -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of download PBIReport' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
 
         Write-Output ('start of get the list of excel file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myExcelItems = Get-RsExcel -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        $myExcelItems = Get-RsExcel -WebPortalURL $WebPortalURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of excel file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myExcelFile = $DownloadPath + '\ExcelWorkbooks.json'
@@ -108,12 +108,12 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of download excel file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        Get-RsExcelContentItems -ReportRestAPIURI $ReportRestAPIURI -Credential $mySourceCredential -ExcelItemsJSON $myExcelItems -ExcelContentPath $ExcelContentPath -ErrorFile $ErrorFile -Verbose
+        Get-RsExcelContentItems -WebPortalURL $WebPortalURL -Credential $mySourceCredential -ExcelItemsJSON $myExcelItems -ExcelContentPath $ExcelContentPath -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of download excel file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
 
         
         Write-Output ('start of get the list of other file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        $myResourceItems = Get-RsResource -ReportRestAPIURI $ReportRestAPIURI -Credential $Credential -ErrorFile $ErrorFile -Verbose
+        $myResourceItems = Get-RsResource -WebPortalURL $WebPortalURL -Credential $Credential -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of get the list of other file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
         if ($ExportFiles) {
             $myResourceFile = $DownloadPath + '\Resources.json'
@@ -121,7 +121,7 @@ function Get-AllItemsFromSource {
         }
 
         Write-Output ('start of download other file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
-        Get-RsResourceContentItems -ReportRestAPIURI $ReportRestAPIURI -Credential $mySourceCredential -ResourceItemsJSON $myResourceItems -ResourceContentPath $ResourceContentPath -ErrorFile $ErrorFile -Verbose
+        Get-RsResourceContentItems -WebPortalURL $WebPortalURL -Credential $mySourceCredential -ResourceItemsJSON $myResourceItems -ResourceContentPath $ResourceContentPath -ErrorFile $ErrorFile -Verbose
         Write-Output ('end of download other file' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
     }
 }

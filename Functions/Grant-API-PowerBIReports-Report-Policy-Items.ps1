@@ -6,7 +6,7 @@ function Grant-RsReportPolicyItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -31,7 +31,7 @@ function Grant-RsReportPolicyItems {
                 try {
                     $myReportPolicyItem = $myReportPolicyItems | Where-Object { $_.ReportId -eq $myReportId } 
                     if ($null -ne $myReportId_New -and $myReportPolicyItem.InheritParentPolicy -eq $false) {
-                        $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/Policies"
+                        $myPowerBIReportAPI = $WebPortalURL + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/Policies"
                         if ($null -ne $Credential) {
                             $myResponse = Invoke-RestMethod -Method Get -Uri $myPowerBIReportAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
                         }

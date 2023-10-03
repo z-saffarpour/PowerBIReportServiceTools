@@ -6,7 +6,7 @@ function New-RsFolderItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -14,7 +14,7 @@ function New-RsFolderItems {
         $ErrorFile
     )
     Begin {
-        $myFolderURI = $ReportRestAPIURI + "/api/v2.0/Folders"
+        $myFolderURI = $WebPortalURL + "/api/v2.0/Folders"
         $myFolderResult = New-Object System.Collections.ArrayList
         $mySpliter = ("--" + ("==" * 70))
     }

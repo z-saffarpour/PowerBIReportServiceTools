@@ -48,15 +48,15 @@ $myExcelContentPath = $DownloadPath + '\ExcelWorkbooks'
 $myResourceContentPath = $DownloadPath + '\Resources'
 $ErrorFile = $ErrorPath + "\ErrorFile_" + (Get-Date -Format "yyyy-MM-dd_HH-mm-ss") + ".txt"
 ##--==============================================================================================================
-$mySourceReportServiceURI = "$SourceReportURI/ReportServer"
-$mySourceReportRestAPIURI = "$SourceReportURI/reports"
+$mySourceReportServerURL = "$SourceReportURI/ReportServer"
+$mySourceWebPortalURL = "$SourceReportURI/reports"
 
 $mySourcePasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $SourcePassword
 [System.Management.Automation.PSCredential]$mySourceCredential = New-Object PSCredential($SourceUser, $mySourcePasswordSecure )
 
 Write-Host ('Start All Items From Source' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green
 
-Get-AllItemsFromSource -ReportServiceURI $mySourceReportServiceURI -ReportRestAPIURI $mySourceReportRestAPIURI -Credential $mySourceCredential `
+Get-AllItemsFromSource -ReportServerURL $mySourceReportServerURL -WebPortalURL $mySourceWebPortalURL -Credential $mySourceCredential `
     -DownloadPath $DownloadPath `
     -PowerBIReportContentPath $myPowerBIReportContentPath `
     -ExcelContentPath $myExcelContentPath `
@@ -66,8 +66,8 @@ Get-AllItemsFromSource -ReportServiceURI $mySourceReportServiceURI -ReportRestAP
 
 Write-Host ('end All Items From Source' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green
 ##--==============================================================================================================
-$myDestinationReportServiceURI = "$DestinationReportURI/ReportServer"
-$myDestinationeReportRestAPIURI = "$DestinationReportURI/reports"
+$myDestinationReportServerURL = "$DestinationReportURI/ReportServer"
+$myDestinationeWebPortalURL = "$DestinationReportURI/reports"
 
 $myDestinationPasswordSecure = ConvertTo-SecureString -AsPlainText -Force -String $DestinationPassword
 [System.Management.Automation.PSCredential]$myDestinationCredential = New-Object PSCredential($DestinationUser, $myDestinationPasswordSecure )
@@ -108,7 +108,7 @@ $myResourceFile = $DownloadPath + '\Resources.json'
 $myResourceJSON = Get-Content -Path $myResourceFile -Raw
 
 Write-Host ('Start Upload All Items to Destination' + "==>" + (Get-Date -Format 'yyyy-MM-dd hh:mm:ss')) -ForegroundColor Green
-New-AllItemsToDestination -ReportServiceURI $myDestinationReportServiceURI -ReportRestAPIURI $myDestinationeReportRestAPIURI -Credential $myDestinationCredential `
+New-AllItemsToDestination -ReportServerURL $myDestinationReportServerURL -WebPortalURL $myDestinationeWebPortalURL -Credential $myDestinationCredential `
     -SystemPolicyItemsJSON $mySystemPolicyJSON `
     -SystemScheduleItemsJSON $mySystemScheduleJSON `
     -FolderItemsJSON $myFolderJSON `

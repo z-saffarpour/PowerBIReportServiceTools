@@ -6,7 +6,7 @@ function Set-RsReportPropertiesItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -27,7 +27,7 @@ function Set-RsReportPropertiesItems {
                 $myReportId_New = $myReportItem.Id_New 
                 try {  
                     if ($null -ne $myReportItem.Id_New) {
-                        $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/"
+                        $myPowerBIReportAPI = $WebPortalURL + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/"
                         $myDescription = [string]::Format("Created By: {0} `nCreated Date:{1}", $myReportItem.CreatedBy , $myReportItem.CreatedDate.Replace("T", " ") )
                         $myHidden = $myReportItem.Hidden
                         $myBody = [PSCustomObject]@{

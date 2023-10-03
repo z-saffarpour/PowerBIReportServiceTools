@@ -3,13 +3,13 @@ function Get-SystemSchedule {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportServiceURI,
+        $ReportServerURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         $ErrorFile
     )
     Begin {
-        $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
+        $myProxyURI = $ReportServerURL + "/ReportService2010.asmx?wsdl"
         $myScheduleItems = New-Object System.Collections.ArrayList
         $mySpliter = ("--" + ("==" * 70))
     }

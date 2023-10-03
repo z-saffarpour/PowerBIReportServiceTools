@@ -6,7 +6,7 @@ function New-RsReportDataSourceItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -34,7 +34,7 @@ function New-RsReportDataSourceItems {
                 try {
                     $myReportDataSourceItem = $myReportDataSourceItems | Where-Object { $_.ReportId -eq $myReportId } 
                     if ($null -ne $myReportItem.Id_New) {
-                        $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/DataSources"
+                        $myPowerBIReportAPI = $WebPortalURL + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/DataSources"
                         if ($null -ne $Credential) {
                             $myResponse = Invoke-RestMethod -Method Get -Uri $myPowerBIReportAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
                         }

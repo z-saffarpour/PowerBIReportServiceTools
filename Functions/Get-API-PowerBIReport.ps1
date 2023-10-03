@@ -6,13 +6,13 @@ function Get-RsPBIReport {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential]
         $Credential,
         $ErrorFile
     )
     Begin {
-        $myPBIReportAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports'
+        $myPBIReportAPI = $WebPortalURL + '/api/v2.0/PowerBIReports'
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {

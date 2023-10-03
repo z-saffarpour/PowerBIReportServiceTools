@@ -6,7 +6,7 @@ function New-RsExcelContentItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -16,7 +16,7 @@ function New-RsExcelContentItems {
         $ErrorFile
     )
     Begin {
-        $myCatalogItemsURI = $ReportRestAPIURI + "/api/v2.0/CatalogItems"
+        $myCatalogItemsURI = $WebPortalURL + "/api/v2.0/CatalogItems"
         $myExcelResultItems = New-Object System.Collections.ArrayList
         $mySpliter = ("--" + ("==" * 70))
     }

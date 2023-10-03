@@ -6,7 +6,7 @@ function Set-RsFolderPropertiesItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -27,7 +27,7 @@ function Set-RsFolderPropertiesItems {
                 $myFolderId_New = $myFolderItem.Id_New 
                 try {  
                     if ($null -ne $myFolderItem.Id_New) {
-                        $myFolderAPI = $ReportRestAPIURI + "/api/v2.0/Folders(" + $myFolderId_New + ")/"
+                        $myFolderAPI = $WebPortalURL + "/api/v2.0/Folders(" + $myFolderId_New + ")/"
                         $myHidden = $myFolderItem.Hidden
                         $myBody = [PSCustomObject]@{
                             "Hidden" = $myHidden;

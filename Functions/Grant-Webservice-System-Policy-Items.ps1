@@ -3,7 +3,7 @@ function Grant-SystemPolicyItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportServiceURI,
+        $ReportServerURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -11,7 +11,7 @@ function Grant-SystemPolicyItems {
         $ErrorFile
     )
     Begin {
-        $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
+        $myProxyURI = $ReportServerURL + "/ReportService2010.asmx?wsdl"
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {

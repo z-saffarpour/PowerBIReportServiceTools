@@ -6,7 +6,7 @@ function Grant-RsFolderPolicyItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -31,7 +31,7 @@ function Grant-RsFolderPolicyItems {
                 try {
                     $myFolderPolicyItem = $myFolderPolicyItems | Where-Object { $_.Id -eq $myFolderId } 
                     if ($null -ne $myFolderId_New -and $myFolderPolicyItem.InheritParentPolicy -eq $false) {
-                        $myFolderAPI = $ReportRestAPIURI + "/api/v2.0/Folders(" + $myFolderId_New + ")/Policies"
+                        $myFolderAPI = $WebPortalURL + "/api/v2.0/Folders(" + $myFolderId_New + ")/Policies"
                         if ($null -ne $Credential) {
                             $myResponse = Invoke-RestMethod -Method Get -Uri $myFolderAPI -Credential $Credential -ContentType 'application/json; charset=unicode' -Verbose:$false
                         }

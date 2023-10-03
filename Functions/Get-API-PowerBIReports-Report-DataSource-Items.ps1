@@ -6,7 +6,7 @@ function Get-RsPBIReportDataSourceItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -26,7 +26,7 @@ function Get-RsPBIReportDataSourceItems {
                 $myReportPath = $myReportItem.Path
                 try {
                     $myDataSourceItems = New-Object System.Collections.ArrayList
-                    $myPBIReportAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports(' + $myReportId + ')/DataSources'
+                    $myPBIReportAPI = $WebPortalURL + '/api/v2.0/PowerBIReports(' + $myReportId + ')/DataSources'
                     if ($null -ne $Credential) {
                         $myResponse = Invoke-RestMethod -Method Get -Uri $myPBIReportAPI -Credential $Credential -Verbose:$false
                     }

@@ -6,13 +6,13 @@ function Get-RsFolder {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         $ErrorFile
     )
     Begin {
-        $myFolderAPI = $ReportRestAPIURI + '/api/v2.0/Folders'
+        $myFolderAPI = $WebPortalURL + '/api/v2.0/Folders'
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {

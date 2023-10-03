@@ -7,7 +7,7 @@ function Get-RsFolderPolicyItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -25,7 +25,7 @@ function Get-RsFolderPolicyItems {
                 $myFolderId = $myFolderItem.Id
                 $myFolderName = $myFolderItem.Name
                 try {
-                    $myFolderAPI = $ReportRestAPIURI + '/api/v2.0/Folders(' + $myFolderId + ')/Policies'
+                    $myFolderAPI = $WebPortalURL + '/api/v2.0/Folders(' + $myFolderId + ')/Policies'
                     if ($null -ne $Credential) {
                         $myResponse = Invoke-RestMethod -Method Get -Uri $myFolderAPI  -Credential $Credential -Verbose:$false
                     }

@@ -6,7 +6,7 @@ function Get-RsPBIReportScheduleItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -25,7 +25,7 @@ function Get-RsPBIReportScheduleItems {
                 $myReportName = $myReportItem.Name
                 $myReportPath = $myReportItem.Path
                 try {
-                    $myPBIReportAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports(' + $myReportId + ')/CacheRefreshPlans'
+                    $myPBIReportAPI = $WebPortalURL + '/api/v2.0/PowerBIReports(' + $myReportId + ')/CacheRefreshPlans'
                     if ($null -ne $Credential) {
                         $myResponse = Invoke-RestMethod -Method Get -Uri $myPBIReportAPI -UseBasicParsing -Credential $Credential -Verbose:$false
                     }

@@ -6,7 +6,7 @@ function Get-RsPBIReportContentItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -30,7 +30,7 @@ function Get-RsPBIReportContentItems {
                 $myReportName = $myReportItem.Name
                 $myReportPath = $myReportItem.Path
                 try {
-                    $myPBIContentAPI = $ReportRestAPIURI + '/api/v2.0/PowerBIReports(' + $myReportId + ')/Content/$value'
+                    $myPBIContentAPI = $WebPortalURL + '/api/v2.0/PowerBIReports(' + $myReportId + ')/Content/$value'
                     $myPBIReportDirectory = $PowerBIReportContentPath + $myReportPath.Substring(0 , $myReportPath.LastIndexOf($myReportName))
                     $myPBIContentFile = $myPBIReportDirectory + '\' + $myReportName + '.pbix'    
                     if (!(Test-Path -Path $myPBIReportDirectory)) {

@@ -6,7 +6,7 @@ function New-RsReportRowLevelSecurityItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -29,7 +29,7 @@ function New-RsReportRowLevelSecurityItems {
                     $myReportItem = $myReportItems | Where-Object { $_.Id -eq $myReportId } 
                     if ($null -ne $myReportItem -and $null -ne $myReportItem.Id_New) {   
                         $myReportId_New = $myReportItem.Id_New 
-                        $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/DataModelRoleAssignments"
+                        $myPowerBIReportAPI = $WebPortalURL + "/api/v2.0/PowerBIReports(" + $myReportId_New + ")/DataModelRoleAssignments"
                         $myRowLevelSecurityJSON = $myReportRowLevelSecurityItem.RowLevelSecurity | ConvertTo-Json -Depth 15
                         if ($myReportRowLevelSecurityItem.RowLevelSecurity.Count -eq 1) {
                             $myBody = "[" + $myRowLevelSecurityJSON + "]"

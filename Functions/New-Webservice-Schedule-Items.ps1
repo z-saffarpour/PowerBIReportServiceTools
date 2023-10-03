@@ -4,7 +4,7 @@
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportServiceURI,
+        $ReportServerURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -12,7 +12,7 @@
         $ErrorFile
     )
     Begin {
-        $myProxyURI = $ReportServiceURI + "/ReportService2010.asmx?wsdl"
+        $myProxyURI = $ReportServerURL + "/ReportService2010.asmx?wsdl"
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {

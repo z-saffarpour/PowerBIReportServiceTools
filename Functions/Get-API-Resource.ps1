@@ -6,13 +6,13 @@ function Get-RsResource {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential]
         $Credential,
         $ErrorFile
     )
     Begin {
-        $myExcelAPI = $ReportRestAPIURI + '/api/v2.0/Resources'
+        $myExcelAPI = $WebPortalURL + '/api/v2.0/Resources'
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {

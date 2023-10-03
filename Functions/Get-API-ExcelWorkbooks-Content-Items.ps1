@@ -6,7 +6,7 @@ function Get-RsExcelContentItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -30,7 +30,7 @@ function Get-RsExcelContentItems {
                 $myExcelName = $myExcelItem.Name
                 $myExcelPath = $myExcelItem.Path
                 try {
-                    $myExcelContentAPI = $ReportRestAPIURI + '/api/v2.0/ExcelWorkbooks(' + $myExcelId + ')/Content/$value'
+                    $myExcelContentAPI = $WebPortalURL + '/api/v2.0/ExcelWorkbooks(' + $myExcelId + ')/Content/$value'
                     $myExcelDirectory = $ExcelContentPath + $myExcelPath.Substring(0 , $myExcelPath.LastIndexOf($myExcelName))
                     $myExcelContentFile = $myExcelDirectory + '\' + $myExcelName    
                     if (!(Test-Path -Path $myExcelDirectory)) {

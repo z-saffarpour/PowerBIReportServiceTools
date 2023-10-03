@@ -6,7 +6,7 @@ function New-RsReportScheduleItems {
     param 
     (
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
-        $ReportRestAPIURI,
+        $WebPortalURL,
         [System.Management.Automation.PSCredential] 
         $Credential,
         [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
@@ -16,7 +16,7 @@ function New-RsReportScheduleItems {
         $ErrorFile
     )
     Begin {
-        $myCacheRefreshPlanAPI = $ReportRestAPIURI + "/api/v2.0/CacheRefreshPlans"
+        $myCacheRefreshPlanAPI = $WebPortalURL + "/api/v2.0/CacheRefreshPlans"
         $myReportScheduleResultItems = New-Object System.Collections.ArrayList
         $mySpliter = ("--" + ("==" * 70))
     }
@@ -29,7 +29,7 @@ function New-RsReportScheduleItems {
                 $myReportName = $myReportScheduleItem.Name
                 $myReportPath = $myReportScheduleItem.Path
                 try {
-                    $myPowerBIReportAPI = $ReportRestAPIURI + "/api/v2.0/PowerBIReports(Path='" + $myReportPath + "')/CacheRefreshPlans"
+                    $myPowerBIReportAPI = $WebPortalURL + "/api/v2.0/PowerBIReports(Path='" + $myReportPath + "')/CacheRefreshPlans"
                     if ($null -ne $Credential) {
                         $myResponse = Invoke-RestMethod -Method Get -Uri $myPowerBIReportAPI -UseBasicParsing -Credential $Credential -ContentType "application/json; charset=unicode" -Verbose:$false
                     }
