@@ -26,7 +26,8 @@ function Get-RsPBIReportContentItems {
 
         .EXAMPLE
             $myPowerBIReportJSON = '[{"Id":"9b073715-a39c-453b-b2eb-2851acbf704e","Name":"Test","Path":"/MobileReport/Test"}]'
-            Get-RsPBIReportContentItems -WebPortalURL "http://localhost/reports" -Credential -PowerBIReportItemsJSON $myPowerBIReportJSON -PowerBIReportContentPath "C:\Temp" -ErrorFile "C:\Temp\Error_20231003.txt"
+            $myCredential = Get-Credential
+            Get-RsPBIReportContentItems -WebPortalURL "http://localhost/reports" -Credential $myCredential -PowerBIReportItemsJSON $myPowerBIReportJSON -PowerBIReportContentPath "C:\Temp" -ErrorFile "C:\Temp\Error_20231003.txt"
             Description
             -----------
             
@@ -77,7 +78,7 @@ function Get-RsPBIReportContentItems {
                 }
                 catch {
                     if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
-                        "Function : Get-RsPBIContentItems" >> $ErrorFile
+                        "Function : Get-RsPBIReportContentItems" >> $ErrorFile
                         "Report Id : $myReportId"  >> $ErrorFile
                         "Report Name : $myReportName"  >> $ErrorFile
                         "Report Path : $myReportPath"  >> $ErrorFile
@@ -92,7 +93,7 @@ function Get-RsPBIReportContentItems {
         }
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
-                "Function : Get-RsPBIContentItems" >> $ErrorFile
+                "Function : Get-RsPBIReportContentItems" >> $ErrorFile
                 $_ >> $ErrorFile  
                 $mySpliter >> $ErrorFile 
             }
