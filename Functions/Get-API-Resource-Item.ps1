@@ -1,4 +1,4 @@
-function Get-RsResource {
+function Get-RsResourceItem {
     <#
         .SYNOPSIS
             This function gets an Json of Resource CatalogItems.
@@ -17,7 +17,7 @@ function Get-RsResource {
 
         .EXAMPLE
             $myCredential = Get-Credential
-            Get-RsResource -WebPortalURL "http://localhost/reports" -Credential $myCredential -ErrorFile "C:\Temp\Error_20231003.txt"
+            Get-RsResourceItem -WebPortalURL "http://localhost/reports" -Credential $myCredential -ResourcePath "/MobileReport/Test.pdf" -ErrorFile "C:\Temp\Error_20231003.txt"
             Description
             -----------
             
@@ -31,10 +31,12 @@ function Get-RsResource {
         $WebPortalURL,
         [System.Management.Automation.PSCredential]
         $Credential,
+        [Parameter(Mandatory = $True, ValueFromPipelineByPropertyName = $true)]
+        $ResourcePath,
         $ErrorFile
     )
     Begin {
-        $myResourceAPI = $WebPortalURL + '/api/v2.0/Resources'
+        $myResourceAPI = $WebPortalURL + "/api/v2.0/Resources(path='" + $ResourcePath + "')"
         $mySpliter = ("--" + ("==" * 70))
     }
     Process {
@@ -45,12 +47,12 @@ function Get-RsResource {
             else {
                 $myResponse = Invoke-RestMethod -Method Get -Uri $myResourceAPI -UseDefaultCredentials -ContentType 'application/json; charset=unicode' -Verbose:$false
             }
-            $myResultJSON = $myResponse.value | ConvertTo-Json -Depth 15   
+            $myResultJSON = $myResponse | Select-Object Id, Name, Description, Path, Type, Hidden, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate| ConvertTo-Json -Depth 15     
             return , $myResultJSON 
         }
         catch {
             if ($null -ne $ErrorFile -and $ErrorFile.Length -gt 0) {
-                "Function : Get-RsResource" >> $ErrorFile
+                "Function : Get-RsResourceItem" >> $ErrorFile
                 $_ >> $ErrorFile  
                 $mySpliter >> $ErrorFile 
             }
